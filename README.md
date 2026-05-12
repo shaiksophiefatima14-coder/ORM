@@ -1,7 +1,7 @@
 # Ex01 Django ORM Web Application
 
 # AIM
-To develop a Django application to store and retrieve data from a bank loan database using Object Relational Mapping(ORM).
+To develop a Django application to manage an online food delivery platform like Zomato/Swiggy using Object Relational Mapping (ORM).
 
 # DESIGN STEPS
 ## STEP 1:
@@ -21,36 +21,54 @@ Execute Django admin and create details for 10 cars
 admin.py
 ```
 from django.contrib import admin
-
-from.models import Car,CarAdmin
-
-admin.site.register(Car,CarAdmin)
-
-#Resgister your models here.
+from .models import Resturant, FoodItem, Cart, Order
+admin.site.register(Resturant)
+admin.site.register(FoodItem)  
+admin.site.register(Cart)
+admin.site.register(Order)
 ```
 
 models.py
 ```
 from django.db import models
-from django.contrib import admin
+from django.contrib.auth.models import User
+class Resturant(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.TextField()
+    phone_number = models.CharField(max_length=20)
 
-class Car(models.Model):
-    car_brand = models.CharField()
-    car_model = models.CharField()
-    year = models.DateField()
-    color = models.CharField()
-    engine_type = models.CharField()
-    fuel_type = models.CharField()
-    transmission = models.CharField()
-    seating_capacity = models.IntegerField()
-    price = models.CharField()m
+    def __str__(self):
+        return self.name
+
+class FoodItem(models.Model):
+    restaurant = models.ForeignKey(Resturant, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    price=models.FloatField()
     description = models.TextField()
+    def __str__(self):
+        return self.name
+    
 
-class CarAdmin(admin.ModelAdmin):
-    list_display = ('car_brand', 'car_model', 'year', 'color', 'engine_type', 'fuel_type', 'transmission', 'seating_capacity', 'price', 'description')
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    food_item = models.ForeignKey(FoodItem, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return self.user.username
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    food_item = models.ForeignKey(FoodItem, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    order_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username
 ```
 # OUTPUT
-<img width="1256" height="671" alt="image" src="https://github.com/user-attachments/assets/1d88a5ef-6092-431d-b50e-3f9d888040b3" />
+<img width="1916" height="527" alt="image" src="https://github.com/user-attachments/assets/aed5f80c-6637-49ab-81de-b24f08dba1f0" />
+
 
 
 
